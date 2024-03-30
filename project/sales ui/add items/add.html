@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-storage.js"></script>
+</head>
+<body>
+    <div>
+        <link href="../css2/style.css" rel="stylesheet" />
+        <div class="page17-container">
+          <div class="page17-page17">
+            <img src="../../img/sales ui img/add items/Rectangle 10.png"  class="page17-rectangle10" />
+            <a href=""><span class="page17-text"><span>Add Product</span></span></a>
+            <a href="../homee.html"><img src="../../img/sales ui img/add items/Vector.png"  alt="Vector1846" class="page17-vector" /></a>
+            <img src="../../img/sales ui img/add items/Ellipse 4.png"  class="page17-ellipse4" />
+            <span class="page17-text02"><span>Mr. Ahmed</span></span>
+            <span class="page17-text04"><span>Add New Item</span></span>
+            <span class="page17-text06"><span>Admin</span></span>
+            <img src="../../img/sales ui img/add items/Rectangle 71.png"  class="page17-rectangle64" />
+            <img src="../../img/sales ui img/add items/Rectangle 71.png"  class="page17-rectangle70" />
+            <img src="../../img/sales ui img/add items/Rectangle 71.png"  class="page17-rectangle71" />
+            <span class="page17-text08"><span><input type="text" id="itemname" class="item-name" placeholder="Item Name" required></span></span>
+            <img src="../../img/sales ui img/add items/Rectangle 71.png"  class="page17-rectangle75" />
+            <span class="page17-text10"><span><input type="text" class="item-name" id="quantity" placeholder="Pcs. / Kg / dozen" required></span></span></span>
+            <span class="page17-text12"><span><input type="text" class="item-name" id="description" placeholder="Describe this Item"></span></span>
+            <img src="../../img/sales ui img/add items/Rectangle 71.png" class="page17-rectangle74" />
+            <span class="page17-text14"><span><input type="text" class="item-name" id="category" placeholder="Select Category" required></span></span>
+
+
+
+            <div class="page17-group3">
+              <A href="./add.html"><img src="../../img/sales ui img/add (1).png" class="page17-image31" /></A>
+              <span class="page17-text16"><span>Add Items</span></span>
+            </div>
+            <span class="page17-text18"><a href="../account/account.html"><span>Account</span></a></span>
+            <span class="page17-text20"></span>
+            <div class="page17-group2">
+              <span class="page17-text21"><A href="../homee.html"><span>Home</span></A></span>
+              <img src="../../img/sales ui img/home icon.png" class="page17-image29" />
+            </div>
+            <img src="../../img/sales ui img/add items/image 30.png" class="page17-image30" />
+            <img src="../../img/sales ui img/add items/Rectangle 71.png" class="page17-rectangle711" />
+            <div class="input-container">
+              <input type="file" id="fileInput" style="display: none;" accept="image/*">
+              <label for="fileInput">
+                  <img src="../../img/sales ui img/add items/image 32.png" class="page17-image32" alt="Camera Image">
+              </label>
+          </div>
+            <span class="page17-text23" id="unit-name"><span>Unit Name:</span></span>
+            <img src="../../img/sales ui img/add items/Rectangle 71.png" class="page17-rectangle76" />
+            <span class="page17-text25"><span><input type="text" class="item-name" id="unit-price" placeholder="Price" required></span></span>
+            <span class="page17-text27" ><span>Unit Price:</span></span>
+            <img
+              src="../../img/sales ui img/list_alt_FILL0_wght400_GRAD0_opsz48 1.png"
+              class="page17-listalt-fill0wght400grad0opsz481"
+            />
+          </div>
+        </div>
+      </div>
+          <script>
+              const firebaseConfig = {
+                apiKey: "AIzaSyAf2smZBKLerNAB5wxWi-ysBAF3yuDJQ-g",
+  authDomain: "hani0-fa553.firebaseapp.com",
+  databaseURL: "https://hani0-fa553-default-rtdb.firebaseio.com",
+  projectId: "hani0-fa553",
+  storageBucket: "hani0-fa553.appspot.com",
+  messagingSenderId: "203751539987",
+  appId: "1:203751539987:web:e1bc4484219ff6630e86e6",
+  measurementId: "G-Q5N3QMPRW2"
+              };
+      
+              const appp = firebase.initializeApp(firebaseConfig);
+              const storage = firebase.storage();
+              const storageRef = storage.ref();
+              const database = firebase.database();
+      
+              const fileUpload = (file) => {
+                  // ... Your fileUpload function here ...
+              };
+      
+              const addProduct = async () => {
+                  let fileInput = document.getElementById('fileInput');
+                  let file = fileInput.files[0];
+                  await fileUpload(file);
+              }
+      
+              const getProducts = () => {
+                  let productsRef = database.ref('products');
+                  productsRef.once('value').then(function (snapshot) {
+                      let products = [];
+                      snapshot.forEach(function (childSnapshot) {
+                          let productData = childSnapshot.val();
+                          products.push(productData);
+                      });
+      
+                      // Update the data for the first two products (assuming you have at least two products)
+                      for (let i = 0; i < 2 && i < products.length; i++) {
+                          let product = products[i];
+                          let productName = document.getElementsByClassName('page17-text22')[i];
+                          let productDesc = document.getElementsByClassName('page17-text24')[i];
+                          let productPrice = document.getElementsByClassName('page17-text29')[i];
+                          let productImage = document.getElementsByClassName('page17-rectangle21')[i];
+      
+                          productName.innerHTML = product.name;
+                          productDesc.innerHTML = product.description;
+                          productPrice.innerHTML = `Rs. ${product.price} - per Kg`;
+                          productImage.src = product.image;
+                      }
+      
+                  }).catch(function (error) {
+                      console.error('Error retrieving product data:', error);
+                  });
+              }
+      
+              getProducts();
+      
+              const addButton = document.getElementById('addButton');
+              addButton.addEventListener('click', addProduct);
+          </script>
+
+
+</body>
+</html>

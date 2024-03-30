@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+ <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-storage.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAf2smZBKLerNAB5wxWi-ysBAF3yuDJQ-g",
+authDomain: "hani0-fa553.firebaseapp.com",
+databaseURL: "https://hani0-fa553-default-rtdb.firebaseio.com",
+projectId: "hani0-fa553",
+storageBucket: "hani0-fa553.appspot.com",
+messagingSenderId: "203751539987",
+appId: "1:203751539987:web:e1bc4484219ff6630e86e6",
+measurementId: "G-Q5N3QMPRW2"
+  };
+const appp = firebase.initializeApp(firebaseConfig);
+// console.log(appp)
+
+const storage = firebase.storage();
+const storageRef = storage.ref();
+const database = firebase.database();
+
+const fileUpload = (file) => {
+    let product = {
+        name: document.getElementById('item-name').value,
+        category: document.getElementById('category').value,
+        description: document.getElementById('description').value,
+        unit: document.getElementById('unit-name').value,
+        price: document.getElementById('unit-price').value,
+        // qunatity: document.getElementById('quantity').value,
+        image: '',
+    }
+    // console.log('File: ', file)
+    // return console.log('Product: ', product)
+
+    // Handle file input change event // Your file input element
+    if (file) {
+        // Create a reference to the file in Firebase Storage
+        const imageRef = storageRef.child('images/' + file.name);
+
+        // Upload the file to Firebase Storage
+        imageRef.put(file).then((snapshot) => {
+            console.log('Image uploaded successfully!');
+
+            // Get the download URL of the uploaded image
+            imageRef.getDownloadURL().then(function (url) {
+                console.log('Download URL:', url);
+                product.image = url;
+                console.log(product);
+
+                // Store the download URL in the Realtime Database
+                let productsRef = database.ref('products');
+                productsRef.push(product).then(function () {
+                    console.log('Product data uploaded successfully');
+                    window.location.href = '../home.html'
+
+
+                }).catch(function (error) {
+                    console.error('Error uploading product data:', error);
+                });
+            })
+                .catch((error) => {
+                    console.log(error);
+                });
+        })
+    }
+}
+
+const addProduct = async () => {
+    let fileInput = document.getElementById('fileInput');
+    let file = fileInput.files[0];
+    await fileUpload(file);
+}
+
+const getProducts = () => {
+    let products = [];
+    let productsRef = database.ref('products');
+    productsRef.once('value').then(function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+            let productData = childSnapshot.val();
+            products.push(productData);
+        });
+        console.log('Products: ', products);
+
+            document.getElementById('productName').innerHTML = products[0].name;
+            document.getElementById('productDesc').innerHTML = products[0].description;
+            document.getElementById('productPrice').innerHTML = products[0].price;
+            document.getElementById('productUnit').innerHTML = products[0].unit;
+            document.getElementById('productImage').src = products[0].image;
+
+            document.getElementById('productName').innerHTML = products[1].name;
+            document.getElementById('productDesc').innerHTML = products[1].description;
+            document.getElementById('productPrice').innerHTML = products[1].price;
+            document.getElementById('productUnit').innerHTML = products[1].unit;
+            document.getElementById('productImage').src = products[1].image;
+
+        
+    }).catch(function (error) {
+        console.error('Error retrieving product data:', error);
+    });
+}
+getProducts();
+</script>
+<body>
+<div>
+  <link href="../purchase ui/css1/style.css" rel="stylesheet" />
+  <div class="page3-container">
+    <div class="page3-page3">
+      <span class="page3-text"><span>SAYLANI WELFARE</span></span>
+      <span class="page3-text02"><span>DISCOUNT STORE</span></span>
+      <div>
+        <div>
+          <a href="./cart/cart.html">
+          <img src="../img/purchase uihome page/Cart icon.png" class="page3-cart" /></a>
+        </div> 
+        
+        <img src="../img/purchase uihome page/Grocery.png" class="page3-grocery" />
+      </div> 
+  
+      <div class="page3-frame3"></div>
+
+      <div>
+        <img src="../img/purchase uihome page/Rectangle 7.png" class="page3-rectangle7" />
+      </div> 
+  
+      <div>
+        <img src="../img/purchase uihome page/Rectangle 6.png" class="page3-rectangle6" />
+      </div> 
+      
+      <div>
+        <img src="../img/purchase uihome page/Rectangle 1.png" class="page3-rectangle1" />
+      </div>
+
+      <div>
+        <img src="../img/purchase uihome page/Rectangle 16.png" class="page3-rectangle161" />
+      </div>
+      <img src="../img/purchase uihome page/Rectangle 17.png" class="page3-rectangle17" />
+      <img src="../img/purchase uihome page/Rectangle 20.png" class="page3-rectangle20" />
+      <img src="../img/purchase uihome page/Rectangle 23.png" class="page3-rectangle23" />
+      <span class="page3-text04"><span>Grocery</span></span>
+      <span class="page3-text06"><span>Vegetables</span></span>
+      <span class="page3-text08"><span>Fruits</span></span>
+      <span class="page3-text10"><span>Masala</span></span>
+      <span class="page3-text12"><span>Meat</span></span>
+      <span class="page3-text14">
+        <span>
+          <span>This is product description</span>
+          <br />
+          <span>This is abc product description</span>
+        </span>
+      </span>
+      <span class="page3-text19"><span>Rs.800 - per Kg</span></span>
+      <div class="page3-group6">
+        <img src="../img/purchase uihome page/Rectangle 2.png" class="page3-rectangle2" />
+        <button id="addButton"><span class="page3-text21">+</span></button>
+
+      </div>
+      <span class="page3-text22"><span>Fish</span></span>
+      <span class="page3-text24">
+        <span>
+          <span>This is product description</span>
+          <br />
+          <span>This is abc product description</span>
+        </span>
+      </span>
+      <span class="page3-text29"><span>Rs.450 - per Kg</span></span>
+      <div class="page3-group7">
+        <img src="../img/purchase uihome page/Rectangle 2.png" class="page3-rectangle21" />
+        <button id="addButton"><span class="page3-text31">+</span></button>
+
+      </div>
+      <span class="page3-text32"><span>Beef Qeema</span></span>
+      <span class="page3-text34">
+        <span>
+          <span>This is product description</span>
+          <br />
+          <span>This is abc product description</span>
+        </span>
+      </span>
+      <span class="page3-text39"><span>Rs.800 - per Kg</span></span>
+      <div class="page3-group8">
+        <img src="../img/purchase uihome page/Rectangle 2.png" class="page3-rectangle22" />
+        <button id="addButton"><span class="page3-text41">+</span></button>
+      </div>
+     <a href="./home.html"> <img src="../img/purchase uihome page/image 2.png" class="page3-image2" /></a>
+     <a href="./cart/"><img src="../img/purchase uihome page/image 8.png" class="page3-image8" /></a>
+      <a href="../purchase ui/profile/profile.html"><img src="../img/purchase uihome page/image 9..png" class="page3-image9" /></a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
